@@ -60,11 +60,25 @@ public class Main {
 ```
 ### 🤔 Preguntas de Análisis
 
-* Carga Perezosa: ¿Cuándo se ejecuta el constructor de RealImage en el código original vs en el código con Proxy?
-* Transparencia: ¿El código cliente necesita saber si está trabajando con un Proxy o con el objeto real? ¿Por qué?
+* Carga Perezosa: ¿Cuándo se ejecuta el constructor de RealImage en el código original vs en el código con Proxy? Sin Proxy, la carga ocurre inmediatamante. Con Proxy, la sentencia ProxyImage no carga la imagen , RealImage se carga cuando se llama a display() . Las llamas posteriores reutilizan la instancia.
+
+* Transparencia: ¿El código cliente necesita saber si está trabajando con un Proxy o con el objeto real? ¿Por qué? 
+
+No necesita saber porque implemenmenta Image y utilizan display() . Solo hay diferiencias en el resultado.
+
+
 * Rendimiento: ¿Qué ventajas de rendimiento ofrece el patrón Proxy en este escenario?
-* Control de Acceso: Además de la carga perezosa, ¿qué otros tipos de control podríamos implementar en el Proxy? (Ej: verificación de permisos, logging, cache)
-* Principio SOLID: ¿Qué principio SOLID se aplica aquí al permitir que el Proxy y el RealImage implementen la misma interfaz?
+Se evita cargar imagenes que solo ocupan recursos innecesarios, se reduce el tiempo de creación y se evita repetir la operación en llamadas posteriores. 
+
+
+
+* Control de Acceso: Además de la carga perezosa, ¿qué otros tipos de control podríamos implementar en el Proxy? (Ej: verificación de permisos, logging, cache) 
+
+Limitar la frecuencia de uso o controlar el acceso a un recurso.
+
+
+
+* Principio SOLID: ¿Qué principio SOLID se aplica aquí al permitir que el Proxy y el RealImage implementen la misma interfaz? Principalmente el pricipio de sustitución de liskov . Tanto ProxyImage como RealImage pueden usarse donde se espera un Image. 
 
 ### 🧪 Pruebas a Realizar
 
@@ -78,7 +92,11 @@ Múltiples llamadas: La carga solo ocurre una vez, incluso con múltiples llamad
 
 Considera cómo extenderías este patrón para:
 
-Proxy de Protección: Verificar permisos antes de cargar/mostrar la imagen
-Proxy de Cache: Almacenar en cache imágenes ya cargadas
-Proxy de Logging: Registrar cada vez que se accede a una imagen
-Proxy Remoto: Acceder a imágenes en servidores remotos
+Proxy de Protección: Verificar permisos antes de cargar/mostrar la imagen , si no tiene el acceso, deniega la operación.
+
+
+Proxy de Cache: Reutiliza la instancia para evitar cargas repetidas.
+
+Proxy de Logging: Registra el acceso y alguna parte de su infromación de ese acceso.
+
+Proxy Remoto: Muestra la imagen desde un servidor remoto. 
